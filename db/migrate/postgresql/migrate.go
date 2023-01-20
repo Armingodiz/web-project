@@ -19,6 +19,14 @@ var migrations = []struct {
 		name: "create-users-table",
 		stmt: createTableUsers,
 	},
+	{
+		name: "create-urls-table",
+		stmt: createTableUrls,
+	},
+	{
+		name: "create-requests-table",
+		stmt: createTableRequests,
+	},
 }
 
 // Migrate performs the database migration. If the migration fails
@@ -106,3 +114,20 @@ CREATE TABLE IF NOT EXISTS users (
 	urls	  JSONB
 )
 `
+
+var createTableRequests = `
+CREATE TABLE IF NOT EXISTS requests (
+	url_id   UUID NOT NULL,
+	result   INT NOT NULL
+)
+`
+
+var createTableUrls = `
+CREATE TABLE IF NOT EXISTS urls (
+	id           UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+	user_name    VARCHAR(255) NOT NULL,
+	Address      VARCHAR(255) NOT NULL,
+	treshold     INT NOT NULL,
+	failed_times INT NOT NULL,
+	requests     JSONB
+)`
