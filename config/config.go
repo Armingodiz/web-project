@@ -14,7 +14,7 @@ type (
 	}
 
 	App struct {
-		Port string `envconfig:"PORT" default:"3000"`
+		Port string `envconfig:"APP_PORT" default:"3000"`
 	}
 
 	Database struct {

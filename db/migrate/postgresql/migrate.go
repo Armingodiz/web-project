@@ -15,6 +15,10 @@ var migrations = []struct {
 		name: "enable-UUID-extension",
 		stmt: enableUUIDExtension,
 	},
+	{
+		name: "create-users-table",
+		stmt: createTableUsers,
+	},
 }
 
 // Migrate performs the database migration. If the migration fails
@@ -93,4 +97,12 @@ SELECT name FROM migration_history
 
 var enableUUIDExtension = `
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+`
+
+var createTableUsers = `
+CREATE TABLE IF NOT EXISTS users (
+	user_name VARCHAR(255) NOT NULL,
+	password  VARCHAR(255) NOT NULL,
+	urls	  JSONB
+)
 `
