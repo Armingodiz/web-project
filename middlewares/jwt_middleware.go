@@ -21,7 +21,7 @@ func JwtAuthorizationMiddleware() gin.HandlerFunc {
 		claims, err := utils.ValidateAndGetClaims(tokenString)
 		if err == nil {
 			log.Println(claims["exp"])
-			c.Set("user_email", claims["user_email"])
+			c.Set("user_name", claims["user_name"])
 			c.Next()
 		} else {
 			c.AbortWithStatus(http.StatusUnauthorized)
