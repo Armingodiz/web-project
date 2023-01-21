@@ -3,9 +3,13 @@ package app
 import (
 	"fmt"
 
+	"web-project/store"
 	"web-project/utils"
 
 	"web-project/config"
+
+	usercontroller "web-project/controllers/userController"
+	"web-project/middlewares"
 
 	"web-project/db"
 
@@ -36,11 +40,20 @@ func (a *App) Start(restPort string) error {
 
 func routing(db *db.DB) *gin.Engine {
 	r := gin.Default()
+	postgresStore := store.NewStore(db)
+	UserController := usercontroller.UserController{Store: postgresStore}
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong!",
 		})
 	})
+	r.POST("/users/signup", UserController.Signup())
+	r.POST("/users/login", UserController.Login())
+
+	//Protected routes
+	r.Use(middlewares.JwtAuthorizationMiddleware())
 	return r
 }
 

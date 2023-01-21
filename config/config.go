@@ -14,7 +14,8 @@ type (
 	}
 
 	App struct {
-		Port string `envconfig:"APP_PORT" default:"3000"`
+		Port      string `envconfig:"APP_PORT" default:"3000"`
+		JwtSecret string `envconfig:"JWT_SECRET"`
 	}
 
 	Database struct {
