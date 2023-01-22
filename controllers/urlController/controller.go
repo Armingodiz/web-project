@@ -23,6 +23,15 @@ func (u *UrlController) CreateUrl() gin.HandlerFunc {
 			return
 		}
 		userName := c.MustGet("user_name").(string)
+		urls, err := u.Store.GetUrls(userName)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		if len(urls) >= 20 {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "You can have only 20 urls"})
+			return
+		}
 		url.UserName = userName
 		id, err := u.Store.CreateUrl(url)
 		if err != nil {
