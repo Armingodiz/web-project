@@ -3,11 +3,13 @@ package app
 import (
 	"fmt"
 
+	"web-project/services/requester"
 	"web-project/store"
 	"web-project/utils"
 
 	"web-project/config"
 
+	alertcontroller "web-project/controllers/alertController"
 	urlcontroller "web-project/controllers/urlController"
 	usercontroller "web-project/controllers/userController"
 	"web-project/middlewares"
@@ -43,7 +45,12 @@ func routing(db *db.DB) *gin.Engine {
 	r := gin.Default()
 	postgresStore := store.NewStore(db)
 	UserController := usercontroller.UserController{Store: postgresStore}
-	UrlController := urlcontroller.UrlController{Store: postgresStore}
+	requester, err := requester.GetRequester(config.Configs.App.RequsterInterval, postgresStore)
+	if err != nil {
+		panic(err)
+	}
+	UrlController := urlcontroller.UrlController{Store: postgresStore, Requester: requester}
+	AlertController := alertcontroller.AlertController{Store: postgresStore}
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 	r.GET("/ping", func(c *gin.Context) {
@@ -59,6 +66,8 @@ func routing(db *db.DB) *gin.Engine {
 	r.POST("/urls", UrlController.CreateUrl())
 	r.GET("/urls", UrlController.GetUrls())
 	r.GET("/urls/:id", UrlController.GetUrl())
+
+	r.GET("/alerts/:id", AlertController.GetAlerts())
 	return r
 }
 

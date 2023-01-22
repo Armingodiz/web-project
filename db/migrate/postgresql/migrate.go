@@ -24,8 +24,12 @@ var migrations = []struct {
 		stmt: createTableUrls,
 	},
 	{
-		name: "create-requests-table",
-		stmt: createTableRequests,
+		name: "create-url-requests-table",
+		stmt: createTableUrlRequests,
+	},
+	{
+		name: "create-alerts-table",
+		stmt: createTableAlerts,
 	},
 }
 
@@ -115,9 +119,9 @@ CREATE TABLE IF NOT EXISTS users (
 )
 `
 
-var createTableRequests = `
-CREATE TABLE IF NOT EXISTS requests (
-	url_id   UUID NOT NULL,
+var createTableUrlRequests = `
+CREATE TABLE IF NOT EXISTS url_requests (
+	url_id   VARCHAR(255) NOT NULL,
 	result   INT NOT NULL
 )
 `
@@ -131,3 +135,10 @@ CREATE TABLE IF NOT EXISTS urls (
 	failed_times INT NOT NULL,
 	requests     JSONB
 )`
+
+var createTableAlerts = `
+CREATE TABLE IF NOT EXISTS alerts (
+	url_id VARCHAR(255) NOT NULL,
+	message VARCHAR(255) NOT NULL
+)
+`
